@@ -20,4 +20,13 @@ server.post('/games/', async (req, res) => {
     }
 })
 
+server.get('/games/', async (req, res) => {
+    try {
+        const games = await db('games');
+        res.status(200).json(games);
+    } catch (err) {
+        res.status(500).json({ error: 'The API is not working. Try again.' });
+    }
+})
+
 module.exports = server;
