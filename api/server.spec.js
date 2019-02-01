@@ -6,11 +6,11 @@ const db = knex(knexConfig.development);
 const server = require('./server');
 
 describe('server.js tests', () => {
-    afterEach(() => {
-        db.truncate();
-    });
-
     describe('POST /games endpoint', () => {
+        afterEach(() => {
+            db('games').truncate();
+        });
+
         it('should return status code of 422 if there is no title in body', async () => {
             const noTitle = { genre: 'RPG' };
 
@@ -28,7 +28,7 @@ describe('server.js tests', () => {
         });
 
         it('should return a status code of 201 if game was sucessfully inserted into db', async () => {
-            const newGame = { title: 'Pokemon: Diamond Version', genre: 'RPG' };
+            const newGame = { title: 'Pokemon: Diamond Version', genre: 'RPG', releaseYear: null };
 
             let response = await request(server).post('/games/').send(newGame);
 
@@ -36,11 +36,11 @@ describe('server.js tests', () => {
         });
 
         it('should return an array of the ids of the sucessfully inserted games', async () => {
-            const newGame = { title: 'Pokemon: Diamond Version', genre: 'RPG' };
+            const newGame = { title: 'Pokemon: Pearl Version', genre: 'RPG' };
 
             let response = await request(server).post('/games/').send(newGame);
 
-            expect(response.body).toEqual([1]);
+            expect(response.body).toEqual([2]);
         });
     });
 });
